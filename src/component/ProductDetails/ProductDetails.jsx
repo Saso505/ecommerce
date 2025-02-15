@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useRef, useContext } from "react";
+import { Link, useParams } from "react-router-dom";
 
 
 import Slider from "react-slick";
@@ -18,6 +18,7 @@ import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import { CartContext } from "../Context/CartContext";
 
 export default function ProductDetails() {
   let { id } = useParams();
@@ -26,6 +27,8 @@ export default function ProductDetails() {
   const [Related, setRelated] = useState([]);
 
   // Fetch product details
+  
+    const { addProductCart } = useContext(CartContext);
   async function getProductDetails() {
     try {
       setLoading(true);
@@ -123,9 +126,12 @@ export default function ProductDetails() {
                     <span className={style.loader}></span>
                   </button>
                 ) : (
-                  <button className="text-white w-1/2 bg-[#2E4772] rounded-[20px] text-xl py-2 capitalize">
-                    Add to Cart
-                  </button>
+                  <Link to="/cart">
+                    <button onClick={() => addProductCart(product.id)} className="text-white w-1/2 bg-[#2E4772] rounded-[20px] text-xl py-2 capitalize">
+                      Add to Cart
+                    </button>
+                  </Link>
+
                 )}
               </div>
             </div>

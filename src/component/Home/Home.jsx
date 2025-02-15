@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import style from "./Home.module.css";
 import lanimg from '../../assets/smiling-positive-brunette-brown-eyed-lady-stylish-outfit-posing-beige-room__1_-removebg-preview.png'
 import Products from "../Products/Products";
-import Footer from "../footer/Footer";
+import Footer from "../Footer/Footer"
 import Categories from "../Category/Categories/Categories";
 
 
