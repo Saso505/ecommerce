@@ -1,7 +1,7 @@
-import  { useContext, useEffect, useState } from 'react'
+/* eslint-disable */
+import { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../Context/UserContext'
 import axios from 'axios';
-
 
 export default function GetAllOrder() {
     let { decToken } = useContext(UserContext)

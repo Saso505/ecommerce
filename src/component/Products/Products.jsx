@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { CartContext } from "../Context/CartContext";
-import {WishContext } from "../Context/WishContext";
+import { WishContext } from "../Context/WishContext";
 
 
 
@@ -14,7 +14,7 @@ export default function Products() {
 
 
   const { addProductCart } = useContext(CartContext);
-  const {addProductWish }=useContext(WishContext);
+  const { addProductWish } = useContext(WishContext);
 
 
   async function getProducts() {
@@ -35,9 +35,9 @@ export default function Products() {
     staleTime: 1000 * 60 * 5, // Cache data for 5 minutes
   });
 
-  if (isLoading) return  <div className="absolute top-0 bottom-0 left-0 right-0 bg-black/90 flex justify-center items-center h-screen">
-                        <span className="loader"><span className={`${style.loader} `}></span> </span>
-                    </div>
+  if (isLoading) return <div className="absolute top-0 bottom-0 left-0 right-0 bg-black/90 flex justify-center items-center h-screen">
+    <span className="loader"><span className={`${style.loader} `}></span> </span>
+  </div>
   if (error) return <div>Error loading products!</div>
 
   return (
@@ -52,7 +52,7 @@ export default function Products() {
         {products.map((product) => (
           <div key={product._id} className=" lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-3 my-5">
             <div className="shadow-xl max-w-sm bg-white rounded-lg text-center main">
-           
+
               <Link to={`/ProductDetails/${product._id}`}>
                 <div className="image w-full">
                   <img className="w-full" src={product.imageCover} alt={product.title} />
@@ -70,12 +70,12 @@ export default function Products() {
                     </span>
                   </div>
                 </div>
-                
+
               </Link>
-                 <Link to="/whish" >
-              <div className="wish" onClick={()=>addProductWish(product.id)}>
-              <i className="fa-regular fa-heart"></i>
-              </div>
+              <Link to="/whish" >
+                <div className="wish" onClick={() => addProductWish(product.id)}>
+                  <i className="fa-regular fa-heart"></i>
+                </div>
               </Link>
               <div className="button pb-2 px-3">
                 <Link to="/cart">
