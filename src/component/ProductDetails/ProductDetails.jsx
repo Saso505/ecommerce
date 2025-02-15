@@ -127,7 +127,7 @@ export default function ProductDetails() {
                   </button>
                 ) : (
                   <Link to="/cart">
-                    <button onClick={() => addProductCart(product.id)} className="text-white w-1/2 bg-[#2E4772] rounded-[20px] text-xl py-2 capitalize">
+                    <button  className="text-white w-1/2 bg-[#2E4772] rounded-[20px] text-xl py-2 capitalize">
                       Add to Cart
                     </button>
                   </Link>
