@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
 
-  "homepage": "http://aso505.github.io/ecommerce",
+  "homepage": "https://aso505.github.io/ecommerce",
   "type": "module",
   "scripts": {
     "predeploy":"npm run build",
