@@ -6,7 +6,7 @@
   "homepage": "http://aso505.github.io/ecommerce",
   "type": "module",
   "scripts": {
-    "predeploy":"non run build",
+    "predeploy":"npm run build",
 
     "deploy":"gh-pages -d dist",
 
