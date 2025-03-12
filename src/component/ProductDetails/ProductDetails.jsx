@@ -6,30 +6,26 @@ import { Link, useParams } from "react-router-dom";
 
 import Slider from "react-slick";
 import style from "./ProductDetails.module.css";
-import { Swiper, SwiperSlide } from "swiper/react";
-import {
-  Autoplay,
-  Pagination,
-  Navigation,
-  EffectCoverflow,
-} from "swiper/modules";
 
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/effect-coverflow";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
+
+
 import { CartContext } from "../Context/CartContext";
+import { WishContext } from "../Context/WishContext";
 
 export default function ProductDetails() {
   let { id } = useParams();
   const [Details, setDetails] = useState(null);
   const [Loading, setLoading] = useState(false);
   const [Related, setRelated] = useState([]);
+  const { addProductCart } = useContext(CartContext);
+  const { addProductWish } = useContext(WishContext);
+
+
+
 
   // Fetch product details
-  
-    const { addProductCart } = useContext(CartContext);
+
+
   async function getProductDetails() {
     try {
       setLoading(true);
@@ -63,9 +59,9 @@ export default function ProductDetails() {
       const filtered = data?.data?.filter(
         (item) => item?.category?.name === Details.category.name
       );
-      setRelated(filtered.slice(0, 10));
+      setRelated(filtered.slice(0, 4));
 
-      console.log("Filtered Related Products:", filtered.slice(0, 10));
+      console.log("Filtered Related Products:", filtered.slice(0, 4));
     } catch (error) {
       console.error(error);
     }
@@ -86,21 +82,33 @@ export default function ProductDetails() {
     slidesToShow: 1,
     slidesToScroll: 1
   };
+  if (Loading)
+    return (
+      <div className="absolute top-0 bottom-0 left-0 right-0 bg-black flex justify-center items-center h-screen z-50">
+        <span className="loader"><span className={`${style.loader} `}></span> </span>
+      </div>
+    );
+
 
   return (
     <>
-      <div className="container mx-auto py-10 px-10">
+    <div className="all bg-gray-100">
+      <div className="container mx-auto py-10  ">
 
         {Details && (
-          <div className="row items-center justify-center">
-            <div className="lg:w-1/5 md:w-1/4 w-1/3">
+          <div className="row items-center justify-center ">
+            <div className="lg:w-1/5 md:w-1/4 w-1/3 shadow-lg " >
+
 
               <Slider {...settings}>
                 {Details?.images.map((src) =>
                   <img
                     key={src}
-                    className="rounded-xl w-full shadow-xl"
+                    className="rounded-xl w-full  "
                     src={src}
+                    alt={Details.title}
+               
+                  
 
                   />
 
@@ -110,30 +118,58 @@ export default function ProductDetails() {
 
             </div>
             <div className="w-3/4 md:px-20 md:py-0 py-10">
-              <h2 className="text-2xl font-semibold mt-5 text-gray-700">
+              <h2 className="text-xl font-bold mt-5 text-black">
                 {Details.title}
               </h2>
-              <span className="text-lg font-bold text-green-600 ">
-                ${Details.price}
+              <span>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <i
+                    key={index}
+                    className={`fa-solid fa-star text-[10px] ${index < Math.round(Details.ratingsAverage)
+                      ? "text-[#FFAD33]"
+                      : "text-gray-300"
+                      }`}
+                  />
+                ))}
               </span>
-              <p className="text-md mt-2 text-gray-400">
-                {Details.category?.name}
+              <p className="text-sm  py-2 font-semibold text-[#DB4444]  ">
+                {Details.price} EGP
               </p>
+
               <p className="text-md mt-2 text-[#2E4772]">{Details.description}</p>
 
               <div className="mt-5">
                 {Loading ? (
-                  <button className="text-white w-1/2 bg-[#2E4772] rounded-[50px] py-1 text-center">
-                    <span className={style.loader}></span>
-                  </button>
+                  <div className="absolute top-0 bottom-0 left-0 right-0 bg-black flex justify-center items-center h-screen z-50">
+                    <span className="loader"><span className={`${style.loader} `}></span> </span>
+                  </div>
                 ) : (
                   <Link to="/cart">
-                    <button  className="text-white w-1/2 bg-[#2E4772] rounded-[20px] text-xl py-2 capitalize">
+                    <button onClick={() => addProductCart(Details.id)} className="text-white w-1/4 bg-black text-sm py-2   rounded-md  capitalize">
                       Add to Cart
                     </button>
                   </Link>
 
+
                 )}
+                {Loading ? (
+                  <div className="absolute top-0 bottom-0 left-0 right-0 bg-black flex justify-center items-center h-screen z-50">
+                    <span className="loader"><span className={`${style.loader} `}></span> </span>
+                  </div>
+                ) : (
+                  <Link to="/whish">
+                    <span
+                      className="  mx-4 px-2 py-2 shadow-xl rounded-md   "
+                      onClick={() => addProductWish(Details.id)}
+                    >
+                      <i className="fa-regular fa-heart text-sm text-[#DB4444] "></i>
+                    </span>
+                  </Link>
+
+
+                )}
+
+
               </div>
             </div>
           </div>
@@ -143,50 +179,85 @@ export default function ProductDetails() {
       </div>
 
       {/* Related Products Swiper */}
-      {Related.length > 0 && (
+      <div className="container mx-auto py-10 px-10">
+
         <div className="py-24">
-          <h1 className="text-3xl font-semibold text-center text-gray-700 mb-6">
+          <span className="text-sm font-semibold text-center header relative text-[#DB4444] mb-6 mx-4 px-2">
             Related Products
-          </h1>
-          <div className="swiper-wrapper">
-            <Swiper
-              ref={swiperRef}
-              effect={"coverflow"}
-              grabCursor={true}
-              loop={true}
-              slidesPerView={Math.min(4, Related.length)} // Ensures proper slide count
-              centeredSlides={true} // Centers the active slide
-              autoplay={{ delay: 2500, disableOnInteraction: false }}
-              pagination={{ clickable: true }}
-              coverflowEffect={{
-                slideShadows: false,
-                rotate: 5, // Adds a slight rotation for better visual separation
-                stretch: 20, // Increases space between slides
-                depth: 80, // Lowers depth effect
-                modifier: 1.5, // Softens the transition
-              }}
-              modules={[Autoplay, Pagination, Navigation, EffectCoverflow]}
-              className="swiper-container mx-auto container px-4"
-            >
-              {Related.map((product) => (
-                <SwiperSlide key={product._id} className="px-2">
-                  <div className="text-center py-2 border rounded-lg shadow-md bg-white">
-                    <img
-                      src={product.imageCover}
-                      alt={product.title}
-                      className="w-full h-36 object-cover rounded-lg"
-                    />
-                    <h3 className="mt-2 text-lg font-bold text-gray-700">{product.title}</h3>
-                    <p className="text-gray-500">{product.category?.name}</p>
-                    <span className="text-green-600 font-semibold">${product.price}</span>
+          </span>
+          <div className="flex flex-wrap items-center justify-center w-full py-5">
+            {Related.length > 0 && (
+              Related.map((Related) => (
+
+              <div
+                key={Related._id}
+                className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full gap-6 px-3 my-5"
+              >
+                <div className="max-w-sm rounded-lg text-center main relative hov shadow-xl">
+                  <Link to="/whish">
+                    <div
+                      className="wish absolute top-3 left-40 px-3 py-2 bg-[#DB4444] fav"
+                      onClick={() => addProductWish(Related.id)}
+                    >
+                      <i className="fa-regular fa-heart text-white"></i>
+                    </div>
+                  </Link>
+
+                  <Link to={`/ProductDetails/${Related._id}`}>
+                    <div className="image w-3/4 h-56 mx-auto">
+                      <img
+                        className="w-full h-full"
+                        src={Related.imageCover}
+                        alt={Related.title}
+                      />
+                    </div>
+                  </Link>
+
+              
+                  <div className="button relative">
+                    <button
+                      onClick={() => addProductCart(Related.id)}
+                      className="w-full btn text-sm py-2 absolute capitalize bg-black text-gray-50 font-lato"
+                    >
+                      Add to Cart
+                    </button>
                   </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
+                  <div className="p-3 text-start bg-gray-50">
+                <span className="font-lato text-sm text-gray-300">
+                  {Related.category?.name}
+                </span>
+                <h5 className="line-clamp-1 text-lg font-bold tracking-tight text-black">
+                  {Related.title}
+                </h5>
+                <div className="price flex justify-between items-center py-2">
+                  <span className="text-[#DB4444] text-sm font-semibold">
+                    {Related.price} EGP
+                  </span>
+
+                  <span>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <i
+                        key={index}
+                        className={`fa-solid fa-star text-sm ${index < Math.round(Related.ratingsAverage)
+                            ? "text-[#FFAD33]"
+                            : "text-gray-300"
+                          }`}
+                      />
+                    ))}
+                  </span>
+                </div>
+              </div>
+
+                </div>
+              </div>
+            )
+            ))}
+
 
           </div>
         </div>
-      )}
+      </div>
+      </div>
     </>
 
 

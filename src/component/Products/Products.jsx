@@ -1,21 +1,22 @@
 /* eslint-disable */
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { CartContext } from "../Context/CartContext";
 import { WishContext } from "../Context/WishContext";
 
-
-
-import style from '../Products/Product.module.css';
+import style from "../Products/Product.module.css";
 
 export default function Products() {
-
+  const [visable, setVisable] = useState(10);
 
   const { addProductCart } = useContext(CartContext);
   const { addProductWish } = useContext(WishContext);
 
+  const addMore = () => {
+    setVisable((prevValue) => prevValue + 10);
+  };
 
   async function getProducts() {
     try {
@@ -32,64 +33,102 @@ export default function Products() {
   const { isLoading, error, data: products } = useQuery({
     queryKey: ["allproducts"],
     queryFn: getProducts,
-    staleTime: 1000 * 60 * 5, // Cache data for 5 minutes
+    staleTime: 1000 * 60 * 5,
   });
 
-  if (isLoading) return <div className="absolute top-0 bottom-0 left-0 right-0 bg-black/90 flex justify-center items-center h-screen">
-    <span className="loader"><span className={`${style.loader} `}></span> </span>
-  </div>
-  if (error) return <div>Error loading products!</div>
+  if (isLoading)
+    return (
+      <div className="absolute top-0 bottom-0 left-0 right-0 bg-black flex justify-center items-center h-screen z-50">
+        <span className="loader"><span className={`${style.loader} `}></span> </span>
+      </div>
+    );
+  if (error) return <div>Error loading products!</div>;
 
   return (
-    <div className="products py-5">
-      <div className="head flex justify-center relative items-center py-5">
-        <h1 className="text-3xl font-semibold text-center text-gray-700 mb-6">
-          Our Products
-        </h1>
+    <div className="products container mx-auto px-10 py-5">
+      <div className="head items-center py-5">
+        <span className="text-sm font-semibold text-center header relative text-[#DB4444] mb-6 mx-4 px-2">
+          Products
+        </span>
+
+        <h2 className="text-3xl font-bold text-black mb-6 py-5 mx-2">
+          Browse By Products
+        </h2>
       </div>
 
-      <div className="flex flex-wrap items-center justify-center w-3/4 mx-auto">
-        {products.map((product) => (
-          <div key={product._id} className=" lg:w-1/4 md:w-1/3 sm:w-1/2 w-full px-3 my-5">
-            <div className="shadow-xl max-w-sm bg-white rounded-lg text-center main">
+      <div className="flex flex-wrap items-center justify-center w-full">
+        {products.slice(0, visable).map((product) => (
+          <div
+            key={product._id}
+            className="lg:w-1/5 md:w-1/3 sm:w-1/2 w-full px-3 my-5"
+          >
+            <div className="max-w-sm rounded-lg text-center main relative hov shadow-xl">
+              <Link to="/whish">
+                <div
+                  className="wish absolute top-3 left-40 px-3 py-2 bg-[#DB4444] fav"
+                  onClick={() => addProductWish(product.id)}
+                >
+                  <i className="fa-regular fa-heart text-white"></i>
+                </div>
+              </Link>
 
               <Link to={`/ProductDetails/${product._id}`}>
-                <div className="image w-full">
-                  <img className="w-full" src={product.imageCover} alt={product.title} />
-                </div>
-                <div className="p-3">
-                  <span className="font-lato text-gray-400">{product.category?.name}</span>
-                  <h5 className="line-clamp-1 text-xl font-bold tracking-tight text-gray-600">
-                    {product.title}
-                  </h5>
-                  <div className="price flex justify-between items-center py-2">
-                    <span className="text-green-600 font-semibold">{product.price} EGP</span>
-                    <span>
-                      {product.ratingsAverage}
-                      <i className="text-yellow-200 fa-solid fa-star"></i>
-                    </span>
-                  </div>
-                </div>
-
-              </Link>
-              <Link to="/whish" >
-                <div className="wish" onClick={() => addProductWish(product.id)}>
-                  <i className="fa-regular fa-heart"></i>
+                <div className="image w-3/4 h-56 mx-auto">
+                  <img
+                    className="w-full h-full"
+                    src={product.imageCover}
+                    alt={product.title}
+                  />
                 </div>
               </Link>
-              <div className="button pb-2 px-3">
-                <Link to="/cart">
-                  <button
-                    onClick={() => addProductCart(product.id)}
-                    className="text-white w-full bg-[#2E4772] rounded-[20px] text-lg py-2 capitalize btn font-lato"
-                  >
-                    Add to Cart
-                  </button></Link>
 
+              {/* "Add to Cart" button removed from Link */}
+              <div className="button relative">
+                <button
+                  onClick={() => addProductCart(product.id)}
+                  className="w-full btn text-sm py-2 absolute capitalize bg-black text-gray-50 font-lato"
+                >
+                  Add to Cart
+                </button>
+              </div>
+
+              <div className="p-3 text-start bg-gray-50">
+                <span className="font-lato text-sm text-gray-300">
+                  {product.category?.name}
+                </span>
+                <h5 className="line-clamp-1 text-lg font-bold tracking-tight text-black">
+                  {product.title}
+                </h5>
+                <div className="price flex justify-between items-center py-2">
+                  <span className="text-[#DB4444] text-sm font-semibold">
+                    {product.price} EGP
+                  </span>
+
+                  <span>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <i
+                        key={index}
+                        className={`fa-solid fa-star text-sm ${index < Math.round(product.ratingsAverage)
+                            ? "text-[#FFAD33]"
+                            : "text-gray-300"
+                          }`}
+                      />
+                    ))}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         ))}
+
+        <div className="flex justify-center items-center w-full py-5">
+          <button
+            className="sm:w-1/6 w-1/2 text-sm py-2 bg-[#DB4444] text-gray-50 font-lato"
+            onClick={addMore}
+          >
+            View More Products
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,34 +1,30 @@
 /* eslint-disable */
+import { jwtDecode } from "jwt-decode";
+import React, { createContext, useEffect, useState } from "react";
 
-import { jwtDecode } from 'jwt-decode';
-import React, { createContext, useEffect, useState } from 'react'
+export const UserContext = createContext(null);
 
-export let UserContext = createContext(0);
+export default function UserContextProvider({ children }) {
+  const [userLogin, setUserLogin] = useState(null);
 
-const [token , setToken]=(localStorage.getItem("userToken"))
-export default function UserContextProvider(props) {
   useEffect(() => {
-    if (localStorage.getItem("userToken") !== null) {
-
-      setUserLogin(localStorage.getItem("userToken"));
+    const storedToken = localStorage.getItem("userToken");
+    if (storedToken) {
+      setUserLogin(jwtDecode(storedToken)); // Decoding and setting the user data
     }
   }, []);
 
-  function decToken(){
-    const {id}=jwtDecode(localStorage.getItem("userToken"));
- 
-    return id
-
-
+  function decToken() {
+    const storedToken = localStorage.getItem("userToken");
+    if (storedToken) {
+      return jwtDecode(storedToken);
+    }
+    return null;
   }
 
-  useEffect(() => {
-    decToken();
-  }, [token]);
-  
-  const [userLogin, setUserLogin] = useState(null)
-  return <UserContext.Provider value={{ userLogin, setUserLogin ,decToken}} >
-    {props.children}
-
-  </UserContext.Provider>
+  return (
+    <UserContext.Provider value={{ userLogin, setUserLogin, decToken }}>
+      {children}
+    </UserContext.Provider>
+  );
 }

@@ -3,6 +3,7 @@ import { CartContext } from "../Context/CartContext";
 
 import style from "./Cart.module.css";
 import { Link } from "react-router-dom";
+import Footer from "../Footer/Footer";
 export default function Cart() {
   const { getProductCart, cartItems, updateProductCart, Loading, deleteProductCart, clearProductCart } = useContext(CartContext);
 
@@ -20,10 +21,11 @@ export default function Cart() {
 
 
   return (
+    <>
     <div className="container mx-auto mt-30">
       {/* Show Loader While Fetching */}
       {Loading && (
-        <div className="absolute top-0 bottom-0 left-0 right-0 bg-black/85 flex justify-center items-center h-screen">
+        <div className="absolute top-0 bottom-0 left-0 right-0 bg-black flex justify-center items-center h-screen z-50">
           <span className="loader"><span className={`${style.loader} `}></span> </span>
         </div>
       )}
@@ -39,14 +41,14 @@ export default function Cart() {
       {/* Show Cart Table */}
       {!Loading && cartItems?.data?.products?.length > 0 && (
         <>
-          <h1 className="text-3xl font-semibold text-center text-gray-700 mb-6">
+          <h1 className="text-2xl font-semibold text-center text-black  mb-8 mt-10">
             Your Cart
           </h1>
-          <a onClick={() => clearProductCart()} className="text-red-800 py-5  text-lg   line-clamp-1 ">clear</a>
+          <a onClick={() => clearProductCart()} className="text-[#DB4444] py-5  text-sm   line-clamp-1  hover:cursor-pointer hover:underline">clear</a>
 
           <div className="relative overflow-x-auto sm:rounded-lg">
             <table className="w-full text-sm text-left text-gray-500 shadow-md">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+              <thead className="text-xs text-black uppercase bg-gray-50">
                 <tr>
                   <th className="px-16 py-3">Image</th>
                   <th className="px-6 py-3">Product</th>
@@ -82,7 +84,7 @@ export default function Cart() {
                       </div>
 
                     </td>
-                    <td className="px-6 py-4 text-green-600 font-semibold">${product.price}</td>
+                    <td className="px-6 py-4 text-[#DB4444]  font-semibold">${product.price}</td>
                     <td className="px-6 py-4">
                       <button onClick={() => deleteProductCart(product.product.id)} className="text-red-600 hover:underline">
                         <i className="fa-solid fa-trash px-2"></i>Remove
@@ -105,6 +107,10 @@ export default function Cart() {
           </div>
         </>
       )}
+    
     </div>
+    <Footer/>
+    </>
+  
   );
 }

@@ -8,7 +8,7 @@
 }
 .btn{
   
-
+left: 0;
     cursor: pointer;
     transition: background-color 2s ease;
     opacity: 0;
@@ -75,6 +75,69 @@
 
 }
 
+
+
 .active {
-  color: #2e477289;
+  color: black;
+  font-weight: bold;
+  font-size: 18px;
+  font-family: "Poppins", sans-serif;
+  position: relative;
+  z-index: 50;
+  transition: color 2s ease;
+}
+
+.active::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 2px;
+  background: #000000;
+  border-radius: 1px;
+  transition: width 0.3s ease-in-out;
+}
+
+.fav{
+  opacity: 0;
+  transform: translateY(-90%);
+  
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+  -webkit-transform: translateX(20%);
+  -moz-transform: translateX(20%);
+  -ms-transform: translateX(20%);
+  -o-transform: translateX(20%);
+}
+.hov:hover .fav{
+
+ 
+  opacity: 1;
+  transform: translateY(0%);
+  transform: translateX(20%);
+
+
+
+}
+
+
+
+.header::before{
+  content: " ";
+  position: absolute;
+  top: 5%;
+  left: -10%;
+  width: 5px;
+  height: 100%;
+
+ background: -webkit-linear-gradient(to right, #DB4444, #F8312F);
+  background: -moz-linear-gradient(to right, #DB4444, #F8312F);
+  background: -ms-linear-gradient(to right, #DB4444, #F8312F);
+  background: -o-linear-gradient(to right, #DB4444, #F8312F);
+  background: linear-gradient(to right, #DB4444, #F8312F);
+
+
+
 }

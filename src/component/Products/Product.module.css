@@ -4,7 +4,7 @@
     border-radius: 50%;
     display: inline-block;
     position: relative;
-    background: linear-gradient(0deg, rgba(239, 233, 231, 0.2) 33%, #6f00ff 100%);
+    background: linear-gradient(0deg, rgba(239, 233, 231, 0.2) 33%, #e7d7fb 100%);
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
 }

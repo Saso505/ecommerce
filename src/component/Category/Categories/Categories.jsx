@@ -62,10 +62,14 @@ export default function Categories() {
     };
 
     return (
-        <div className="container mx-auto py-10 px-10">
-            <h1 className="text-3xl font-semibold text-center text-gray-700 mb-6">
+        <div className="container mx-auto py-20 px-10">
+            <span className="text-sm font-semibold text-center header  relative text-[#DB4444] mb-6 mx-4  px-2">
                 Categories
-            </h1>
+            </span>
+
+            <h2 className="text-3xl   font-bold text-black mb-6 py-5 mx-2 ">
+                Browse By Category
+            </h2>
 
             <Slider {...settings}>
                 {categories.map((item) => (
@@ -77,9 +81,9 @@ export default function Categories() {
                         <img
                             src={item.image}
                             alt={item.name}
-                            className="w-full h-40 object-cover rounded-md shadow-md"
+                            className="w-full h-60 object-cover rounded-md shadow-md"
                         />
-                        <h2 className="mt-2 text-lg font-bold text-center">{item.name}</h2>
+                        <h2 className="mt-2 text-lg font-semibold  text-center">{item.name}</h2>
                     </div>
                 ))}
             </Slider>
@@ -95,10 +99,10 @@ export default function Categories() {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
-                            className="absolute top-2 right-2 text-gray-700 font-bold text-xl"
+                            className="absolute top-2 right-2 text-gray-300 font-bold text-xl "
                             onClick={() => setSubcategories(null)}
                         >
-                            ✖
+                            x
                         </button>
                         <img
                             src={subcategories.image}
