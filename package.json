@@ -2,11 +2,11 @@
   "name": "my-project",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://aso505.github.io/ecommerce",
+  "homepage": "https://Saso505.github.io/ecommerce",
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
+    "deploy": "main -d dist",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
